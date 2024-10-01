@@ -78,6 +78,16 @@ void print_newline() {
 
         clear_row(NUM_ROWS - 1);
     }
+
+}
+
+// Convert a single nibble (4 bits) to its hex character representation
+char nibble_to_hex(uint8_t nibble) {
+    if (nibble < 10) {
+        return '0' + nibble;
+    } else {
+        return 'A' + (nibble - 10);
+    }
 }
 
 #ifdef UTIL_HPP
@@ -145,6 +155,16 @@ void print_str(const char* str) {
 
     update_cursor(row, col); 
     printingString = false;
+}
+
+void print_hex(const uint32_t num) {
+    print_str("0x"); // Prefix for hex numbers
+
+    // Print each nibble (4 bits) as a hex digit
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (num >> (i * 4)) & 0xF;  // Extract the current nibble
+        print_char(nibble_to_hex(nibble));        // Print the corresponding hex digit
+    }
 }
 
 // Changing text color

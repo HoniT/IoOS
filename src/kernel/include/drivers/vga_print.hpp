@@ -43,6 +43,7 @@ enum VGA_Print_Colors {
 void print_clear();
 void print_char(const char character);
 void print_str(const char* str);
+void print_hex(const uint32_t num);
 void print_set_color(const uint8_t foreground, const uint8_t background);
 
 

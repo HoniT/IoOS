@@ -16,6 +16,9 @@
 
 #include <drivers/vga_print.hpp>
 #include <interrupts/idt_main.hpp>
+#include <memory/pmm_main.hpp>
+
+extern bool PMM_TestPassed;
 
 extern "C" void kernel_main();
 

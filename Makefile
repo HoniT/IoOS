@@ -43,6 +43,7 @@ PRINT_OBJ = $(BUILD)/print.o
 UTIL_OBJ = $(BUILD)/util.o 
 IDT_MAIN_OBJ = $(BUILD)/idt_main.o
 IDT_OBJ = $(BUILD)/idt.o
+PMM_MAIN_OBJ = $(BUILD)/pmm_main.o
 
 all:
 
@@ -56,10 +57,11 @@ all:
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/drivers_src/vga_print.cpp -o $(PRINT_OBJ)
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/util.cpp -o $(UTIL_OBJ)
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/interrupts/idt_main.cpp -o $(IDT_MAIN_OBJ)
+	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/memory_src/pmm_main.cpp -o $(PMM_MAIN_OBJ)
 
 # Link all object files (bootloader + kernel) into an ELF file and binary file
 	$(GCC) $(GCC_LINK_FLAGS) -T tools/linker.ld -o $(OS_ELF) \
-		$(BOOT_OBJ) $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ) $(PRINT_OBJ) $(UTIL_OBJ) $(IDT_MAIN_OBJ) $(IDT_OBJ)
+		$(BOOT_OBJ) $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ) $(PRINT_OBJ) $(UTIL_OBJ) $(IDT_MAIN_OBJ) $(IDT_OBJ) $(PMM_MAIN_OBJ)
 	$(OBJCOPY) -O binary $(OS_ELF) $(OS_BIN)
 
 # Create 10MiB disk image
