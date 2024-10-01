@@ -47,7 +47,7 @@ void initPmm() {
 
         // Debugging steps
         if(memory_bitmap[i / 8] != 0) {
-            PMM_TestPassed = false;
+            PMM_TestFailed[0] = false;
 
             print_str("Error in zeroing Bitmap! Address: ");
             print_hex(i);
@@ -79,7 +79,7 @@ void* allocate_block(const uint32_t num_blocks) {
 
                 // Debugging steps
                 if(memory_bitmap[(i + j) / 8] == 0) {
-                    PMM_TestPassed = false;
+                    PMM_TestFailed[1] = false;
 
                     print_str("Error, could not allocate block! Address: ");
                     print_hex(i);
@@ -101,7 +101,7 @@ void free_block(const void* address) {
 
     // Debugging steps
     if(memory_bitmap[block_number / 8] != 0) {
-        PMM_TestPassed = false;
+        PMM_TestFailed[2] = false;
 
         print_str("Error, could not free block! Address: ");
         print_hex(block_number);

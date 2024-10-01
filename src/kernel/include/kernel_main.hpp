@@ -18,7 +18,7 @@
 #include <interrupts/idt_main.hpp>
 #include <memory/pmm_main.hpp>
 
-extern bool PMM_TestPassed;
+extern bool PMM_TestFailed[3];
 
 extern "C" void kernel_main();
 

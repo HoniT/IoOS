@@ -8,7 +8,7 @@
 
 #include <kernel_main.hpp> 
 
-bool PMM_TestPassed = true;
+bool PMM_TestFailed[3];
 
 
 // ========================================
@@ -39,8 +39,7 @@ extern "C" void kernel_main() {
 
     // Setting up text labels
     setUpMainText();
-    if(PMM_TestPassed)
-        testPmm();
+    testPmm();
 
     // Infinite loop
     while(true) {}
@@ -67,9 +66,15 @@ void setUpMainText() {
 void testPmm() {
     // Printing PMM test passing
     print_str("\n\n--PMM-Tests--\n");
-    print_str("Test 1 Passed Successfully! \n");
-    print_str("Test 2 Passed Successfully! \n");
-    print_str("Test 3 Passed Successfully! \n");
+
+    // Iterating and seeing test result
+    for(int i = 0; i < 3; i++) {
+        if(!PMM_TestFailed[i]) {
+            print_str("Test ");
+            print_char(i + 1 + 48); // Test number + 48 (ASCII code for 0)
+            print_str(" passed successfully!\n");
+        }
+    }
 }
 
 #pragma endregion
