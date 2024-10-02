@@ -8,8 +8,6 @@
 
 #include <kernel_main.hpp> 
 
-bool PMM_TestFailed[3];
-
 
 // ========================================
 // Function declarations and variables
@@ -37,6 +35,9 @@ extern "C" void kernel_main() {
     initPmm(); // Physical Memory Manager
     #pragma endregion
 
+    allocate_block(3);
+    free_block(0);
+
     // Setting up text labels
     setUpMainText();
     testPmm();
@@ -47,15 +48,14 @@ extern "C" void kernel_main() {
 }
 
 
-// Set up text labels using print functions
-// defined in drivers_src/print_src/print.cpp
+/* Set up text labels using print functions
+// defined in drivers_src/print_src/print.cpp */
 void setUpMainText() {
     // Clearing and setting up colors
-    print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLUE);
+    print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
     print_clear();
 
-    print_char('\n');
-    print_str(" ------------------------------------ IoOS ------------------------------------ ");
+    print_str(" ------------------------------------ IoOS ------------------------------------ \n");
 
     //print_char((char)1/0); // Test for IDT
 }
@@ -65,16 +65,103 @@ void setUpMainText() {
 
 void testPmm() {
     // Printing PMM test passing
-    print_str("\n\n--PMM-Tests--\n");
+    print_str("\n--PMM-Tests--\n");
 
-    // Iterating and seeing test result
-    for(int i = 0; i < 3; i++) {
-        if(!PMM_TestFailed[i]) {
-            print_str("Test ");
-            print_char(i + 1 + 48); // Test number + 48 (ASCII code for 0)
-            print_str(" passed successfully!\n");
-        }
+    bool all_tests_passed = true, passed_test1 = true; // If this turns false it will display a message
+
+    // Creating test blocks to test PMM
+
+    // Test 1: Allocating one block
+    void* block1 = allocate_block(1);
+    if(!is_block_free((uint32_t)block1 / NUM_BLOCKS)) {
+        print_str("Test 1 Passed! Allocated single block at address: ");
+        print_hex((uint32_t)block1);
+        print_char('\n');
+    } else {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+        print_str("Test 1 Failed! ");
+
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+        print_str("Failed to allocate block! \n");
+
+        all_tests_passed = false;
+        passed_test1 = false;
     }
+
+    // Test 2: Allocating multiple blocks
+    void* block2 = allocate_block(5);
+    if(block2 != nullptr) {
+        print_str("Test 2 Passed! Allocated five blocks at address: ");
+        print_hex((uint32_t)block2);
+        print_char('\n');
+    } else {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+        print_str("Test 2 Failed! ");
+
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+        print_str("Failed to allocate blocks! \n");
+
+        all_tests_passed = false;
+    }
+
+    // Test 3: Free the first block
+    if(passed_test1) {
+        free_block(block1, 1);
+
+        if(is_block_free((uint32_t)block1 / BLOCK_SIZE)) { // Checking memory bitmap
+            print_str("Test 3 Passed! Successfully freed up block at: ");
+            print_hex((uint32_t)block1);
+            print_char('\n');
+        } else {
+            print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+            print_str("Test 3 Failed! ");
+
+            print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+            print_str("Failed to free up block!\n");
+
+            all_tests_passed = false;
+        }
+    } else {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+        print_str("Test 3 Failed! ");
+
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+        print_str("Did not find allocated block- \"Block 1\"\n");
+
+        all_tests_passed = false;
+    }
+
+    // Test 4: Allocate a block after freeing
+    void* block3 = allocate_block(1);
+    if(!is_block_free((uint32_t)block3 / NUM_BLOCKS)) {
+        print_str("Test 4 Passed! Allocated block after freeing at address: ");
+        print_hex((uint32_t)block3);
+        print_char('\n');
+    } else {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+        print_str("Test 4 Failed! ");
+
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+        print_str("Failed to allocate block after freeing! \n");
+
+        all_tests_passed = false;
+    }
+
+
+
+    // Final message
+    if(!all_tests_passed) {
+        print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
+        print_str("PMM test/s failed!\n");
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+    } else {
+        print_set_color(PRINT_COLOR_GREEN, PRINT_COLOR_BLUE);
+        print_str("PMM tests passed!\n");
+        print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
+    }
+
+    // Free up allocated memory
+    set_block_free(0, NUM_BLOCKS);
 }
 
 #pragma endregion
