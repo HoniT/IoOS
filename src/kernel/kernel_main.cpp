@@ -7,6 +7,10 @@
 // =====================================
 
 #include <kernel_main.hpp> 
+#include <drivers/vga_print.hpp>
+#include <interrupts/idt_main.hpp>
+#include <memory/pmm_main.hpp>
+#include <memory/paging.hpp>
 
 
 // ========================================
@@ -32,14 +36,11 @@ extern "C" void kernel_main() {
     #pragma region Initialization
 
     initIdt(); // Interrupt Descriptor Table
+    setUpMainText(); // Setting up text labels and testing
     initPmm(); // Physical Memory Manager
+    initPaging(); // Virtual Memory Paging
     #pragma endregion
 
-    allocate_block(3);
-    free_block(0);
-
-    // Setting up text labels
-    setUpMainText();
     testPmm();
 
     // Infinite loop
@@ -73,7 +74,7 @@ void testPmm() {
 
     // Test 1: Allocating one block
     void* block1 = allocate_block(1);
-    if(!is_block_free((uint32_t)block1 / NUM_BLOCKS)) {
+    if(block1 != nullptr) {
         print_str("Test 1 Passed! Allocated single block at address: ");
         print_hex((uint32_t)block1);
         print_char('\n');
@@ -133,7 +134,7 @@ void testPmm() {
 
     // Test 4: Allocate a block after freeing
     void* block3 = allocate_block(1);
-    if(!is_block_free((uint32_t)block3 / NUM_BLOCKS)) {
+    if(block3 != nullptr) {
         print_str("Test 4 Passed! Allocated block after freeing at address: ");
         print_hex((uint32_t)block3);
         print_char('\n');

@@ -44,6 +44,8 @@ UTIL_OBJ = $(BUILD)/util.o
 IDT_MAIN_OBJ = $(BUILD)/idt_main.o
 IDT_OBJ = $(BUILD)/idt.o
 PMM_MAIN_OBJ = $(BUILD)/pmm_main.o
+ENABLE_PAGING_OBJ = $(BUILD)/enable_paging.o 
+PAGING_OBJ = $(BUILD)/paging.o
 
 all:
 
@@ -51,6 +53,7 @@ all:
 	$(ASM) -f elf -g $(BOOTLOADER_DIR)/boot.asm -o $(BOOT_OBJ)
 	$(ASM) -f elf -g $(BOOTLOADER_DIR)/kernel_entry.asm -o $(KERNEL_ENTRY_OBJ)
 	$(ASM) -f elf -g $(KERNEL_DIR)/interrupts/idt.asm -o $(IDT_OBJ)
+	$(ASM) -f elf -g $(KERNEL_DIR)/memory_src/enable_paging.asm -o $(ENABLE_PAGING_OBJ)
 
 # Compiling CPP files
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/kernel_main.cpp -o $(KERNEL_OBJ)
@@ -58,10 +61,11 @@ all:
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/util.cpp -o $(UTIL_OBJ)
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/interrupts/idt_main.cpp -o $(IDT_MAIN_OBJ)
 	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/memory_src/pmm_main.cpp -o $(PMM_MAIN_OBJ)
+	$(CXX) -I./src $(CXX_FLAGS) -std=c++23 -c $(KERNEL_DIR)/memory_src/paging.cpp -o $(PAGING_OBJ)
 
 # Link all object files (bootloader + kernel) into an ELF file and binary file
 	$(GCC) $(GCC_LINK_FLAGS) -T tools/linker.ld -o $(OS_ELF) \
-		$(BOOT_OBJ) $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ) $(PRINT_OBJ) $(UTIL_OBJ) $(IDT_MAIN_OBJ) $(IDT_OBJ) $(PMM_MAIN_OBJ)
+		$(BOOT_OBJ) $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ) $(PRINT_OBJ) $(UTIL_OBJ) $(IDT_MAIN_OBJ) $(IDT_OBJ) $(PMM_MAIN_OBJ) $(ENABLE_PAGING_OBJ) $(PAGING_OBJ)
 	$(OBJCOPY) -O binary $(OS_ELF) $(OS_BIN)
 
 # Create 10MiB disk image

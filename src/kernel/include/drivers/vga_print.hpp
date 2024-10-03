@@ -1,6 +1,6 @@
 // =======================================================
 // vga_print.hpp
-// Header file for printing text through kernel to BIOS
+// Header file for printing text through kernel to VGA
 //
 // Author: Ioane Baidoshvili
 // Date 16-Sep-24

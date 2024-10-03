@@ -11,13 +11,6 @@
 #ifndef KERNEL_MAIN_HPP
 #define KERNEL_MAIN_HPP
 
-/* Needed Headers
- * kernel_main.hpp connects every needed header file into one file */
-
-#include <drivers/vga_print.hpp>
-#include <interrupts/idt_main.hpp>
-#include <memory/pmm_main.hpp>
-
 
 extern "C" void kernel_main();
 

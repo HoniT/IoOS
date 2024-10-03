@@ -8,7 +8,6 @@
 
 #include <memory/pmm_main.hpp>
 #include <drivers/vga_print.hpp>
-#include <kernel_main.hpp>
 
 // Memory Bitmap to track free and used blocks
 uint8_t memory_bitmap[NUM_BLOCKS / 8];
@@ -85,6 +84,8 @@ void* allocate_block(const uint32_t num_blocks) {
 
             print_str("Allocated block range starting at index: ");
             print_hex(i);
+            print_str(", physical address:");
+            print_hex(i * BLOCK_SIZE); // Prints actual address
             print_char('\n');
 
             return (void*)(i * BLOCK_SIZE); // Returning the starting physical address

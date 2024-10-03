@@ -1,6 +1,6 @@
 // =======================================================
 // vga_print.cpp
-// CPP file for printing text through kernel to BIOS
+// CPP file for printing text through kernel to VGA
 //
 // Author: Ioane Baidoshvili
 // Date 16-Sep-24
