@@ -15,7 +15,7 @@
 // Allocates a page table using our PMM
 PageTable* allocate_page_table(const char* error_message = "") { // Optionary error message
     void* physical_address = allocate_block(1); // Allocates 1 block because each table needs 4KiB (4096 bytes)
-    if(physical_address == nullptr) {
+    if(physical_address == nullptr && allocation_num > 1) {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
         print_str("Out of memory ");
         print_str(error_message);
@@ -86,7 +86,7 @@ void page_fault_handler() {
 void initPaging() {
     PageTable* pml4 = allocate_page_table("PML4");
     // Check memory
-    if(pml4 == nullptr) {
+    if(pml4 == nullptr && allocation_num > 1) {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
         print_str("Paging initialization failed! ");
 
@@ -99,6 +99,6 @@ void initPaging() {
     setup_identity_mapping(pml4);
 
     // Inable paging via enable_paging.asm file
-    enable_32bit_paging(reinterpret_cast<uint64_t>(pml4));
+    enable_32bit_paging();
     
 }

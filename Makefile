@@ -69,8 +69,8 @@ all:
 	$(OBJCOPY) -O binary $(OS_ELF) $(OS_BIN)
 
 # Create 10MiB disk image
-	dd if=/dev/zero of=$(DISK_IMG) bs=1M count=10
-	dd if=$(OS_BIN) of=$(DISK_IMG) seek=0 conv=notrunc
+	#dd if=/dev/zero of=$(DISK_IMG) bs=1M count=10
+	#dd if=$(OS_BIN) of=$(DISK_IMG) seek=0 conv=notrunc
 
 # Cleaning the build
 clean:
@@ -82,3 +82,4 @@ clean:
 	rm -f $(BOOT_OBJ) 
 	rm -f $(KERNEL_OBJ)
 	rm -f $(PRINT_OBJ) 
+	

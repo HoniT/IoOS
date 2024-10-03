@@ -8,6 +8,10 @@
 
 #include <memory/pmm_main.hpp>
 #include <drivers/vga_print.hpp>
+#include <util.hpp>
+
+// Gets rid of block 0 address problem
+uint8_t allocation_num = 0;
 
 // Memory Bitmap to track free and used blocks
 uint8_t memory_bitmap[NUM_BLOCKS / 8];
@@ -43,21 +47,7 @@ bool is_block_free(const uint32_t block_number) {
 }
 
 void initPmm() {
-    // Freeing bitmap for every block
-    for(uint32_t i = 0; i < NUM_BLOCKS; i++) {
-        set_block_free(i);
-
-        // Debugging step
-        if(!is_block_free(i)) {
-            print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
-            print_str("Failed PMM initialization! ");
-
-            print_set_color(PRINT_COLOR_CYAN, PRINT_COLOR_BLUE);
-            print_str("Block initialization failed at index: ");
-            print_hex(i);
-            print_char('\n');
-        }
-    }
+    memset(memory_bitmap, 0, sizeof(memory_bitmap));
 }
 
 
@@ -87,6 +77,9 @@ void* allocate_block(const uint32_t num_blocks) {
             print_str(", physical address:");
             print_hex(i * BLOCK_SIZE); // Prints actual address
             print_char('\n');
+
+            if(allocation_num < 2) 
+                allocation_num++;
 
             return (void*)(i * BLOCK_SIZE); // Returning the starting physical address
         }

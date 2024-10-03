@@ -19,7 +19,7 @@
 
 // Memory bitmap array
 extern uint8_t memory_bitmap[NUM_BLOCKS / 8];
-
+extern uint8_t allocation_num;
 
 // Functions defined in pmm_main.cpp
 void initPmm(); // Initializes the Physical Memory Manager (PMM)

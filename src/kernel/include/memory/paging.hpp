@@ -37,7 +37,7 @@ struct PageTable {
 
 extern "C" {
     // ASM function
-    extern void enable_32bit_paging(uint64_t pml4);
+    extern void enable_32bit_paging();
 }
 
 

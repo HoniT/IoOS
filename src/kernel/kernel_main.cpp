@@ -38,9 +38,11 @@ extern "C" void kernel_main() {
     initIdt(); // Interrupt Descriptor Table
     setUpMainText(); // Setting up text labels and testing
     initPmm(); // Physical Memory Manager
+
     initPaging(); // Virtual Memory Paging
     #pragma endregion
 
+    // Testing
     testPmm();
 
     // Infinite loop
@@ -78,7 +80,7 @@ void testPmm() {
         print_str("Test 1 Passed! Allocated single block at address: ");
         print_hex((uint32_t)block1);
         print_char('\n');
-    } else {
+    } else if(allocation_num > 1) {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
         print_str("Test 1 Failed! ");
 
@@ -95,7 +97,7 @@ void testPmm() {
         print_str("Test 2 Passed! Allocated five blocks at address: ");
         print_hex((uint32_t)block2);
         print_char('\n');
-    } else {
+    } else if(allocation_num > 1) {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
         print_str("Test 2 Failed! ");
 
@@ -138,7 +140,7 @@ void testPmm() {
         print_str("Test 4 Passed! Allocated block after freeing at address: ");
         print_hex((uint32_t)block3);
         print_char('\n');
-    } else {
+    } else if(allocation_num > 1) {
         print_set_color(PRINT_COLOR_RED, PRINT_COLOR_BLUE);
         print_str("Test 4 Failed! ");
 
